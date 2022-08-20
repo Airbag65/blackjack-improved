@@ -3,6 +3,7 @@
 ## Card:
 - Färg (suit)
 - Värde
+- face value
 - Ace (1 eller 11 beroende på totalt värde)
 
 
