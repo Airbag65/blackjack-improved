@@ -1,26 +1,35 @@
 import sqlite3
-con = sqlite3.connect("database/database.db")
+
+con = sqlite3.connect("database/database.sqlite")
+
 cur = con.cursor()
-sql_query = ""
-exec_sql = ""
+
+#! Tabell struktur
+cur.execute("drop table if exists games;")
+cur.execute("drop table if exists users;")
+cur.execute("PRAGMA foreign_keys = on;")
+cur.execute("""create table users(
+    id integer primary key autoincrement not null,
+    username text not null,
+    email text not null,
+    firstName text not null,
+    lastName text not null,
+    balance float default 0.0,
+    password text not null);
+""")
+cur.execute("""create table games(
+    id integer primary key autoincrement not null,
+    playerCards text not null, 
+    dealerCards text not null,
+    bet float not null,
+    outcome text default null);
+""")
 
 
-sql_file = open("database/migrate.sql", "r")
-sql_data = sql_file.readlines()
-sql_file.close()
-for line in sql_data:
-    new_line = line.replace("\n", "")
-    if new_line == "":
-        continue
-    sql_query += new_line
-    if sql_query.endswith(";"):
-        exec_sql = exec_sql.replace("    ", "")
-        print(exec_sql)
-        cur.execute(exec_sql)
-        sql_query = ""
-        print("END of quary line")
-        con.commit()
-    else:
-        continue
+#! Standard användare
+cur.execute("""insert into users(username, email, firstName, lastName, password)
+    values('Airbag65', 'normananton03@gmail.com', 'Anton', 'Norman', 'db63c7e38ee64bdd02601002fb27eff5')""")
+
+#! Bekräfta databasmutationer
 con.commit()
 cur.close()
