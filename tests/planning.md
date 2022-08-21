@@ -61,9 +61,20 @@
 
 
 # Utförs nu: 
-
+- Skapa huvudmeny (Skapad men inte klar)
+    - Spela
+    - Avsluta (Klar)
+    - Plånbok (Skapad men inte klar)
+        - Visa saldo (Klar)
+        - Insättning
+        - Uttag
+    - Mitt konto
+        - visa uppgifter
+        - se tidigare spelomgångar
 
 # Utfört: 
 - Skapa basklasser utan metoder
 - Skapa databas struktur
 - Skapa inloggningssystem
+- Skapa startsida 
+    - välja logga in eller skapa konto

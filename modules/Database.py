@@ -1,4 +1,4 @@
-from .query import fetch, add
+from .query import add, fetch
 import sqlite3
 
 class Database:
@@ -34,5 +34,4 @@ class Database:
         except:
             print("Något gick fel!")
             return False
-        print("Kontot skapat!")
         return True
