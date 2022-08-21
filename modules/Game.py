@@ -59,7 +59,7 @@ class Game:
                 entered_email,
                 entered_firstname,
                 entered_lastname,
-                password=entered_password)
+                entered_password)
             return True
         else:
             print("Lösenorden är inte likadana!")
