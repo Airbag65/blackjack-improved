@@ -4,4 +4,4 @@ from modules.Database import Database
 
 if __name__ == "__main__":
     g = Game("database/database.sqlite")
-    g.login()
+    g.new_account()
