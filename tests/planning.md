@@ -57,9 +57,13 @@
     - Logga in om allt matchar
     - Felmeddelande och försök igen om det inte matchar
 
+# Att Göra:
+
 
 # Utförs nu: 
-- Skapa basklasser utan metoder
-- Skapa databas struktur
+
 
 # Utfört: 
+- Skapa basklasser utan metoder
+- Skapa databas struktur
+- Skapa inloggningssystem
