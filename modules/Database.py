@@ -1,4 +1,4 @@
-from .query import fetch
+from .query import fetch, add
 import sqlite3
 
 class Database:
@@ -6,8 +6,8 @@ class Database:
         self.con = sqlite3.connect(database_path)
         self.cur = self.con.cursor()
 
-    def fetch(self, query_string, username) -> dict:
-        query = fetch[query_string].format(username = username)
+    def fetch(self, query_string, prompt) -> dict:
+        query = fetch[query_string].format(prompt=prompt)
         self.cur.execute(query)
         fetched_data = list(self.cur.fetchall()[0])
         data = {
@@ -21,3 +21,18 @@ class Database:
         }
         return data
 
+    def add(self, query_string, username, email, firstname, lastname, password) -> bool:
+        query = add[query_string].format(
+            username=username,
+            email=email,
+            firstname=firstname,
+            lastname=lastname,
+            password=password)
+        try:
+            self.cur.execute(query)
+            self.con.commit()
+        except:
+            print("Något gick fel!")
+            return False
+        print("Kontot skapat!")
+        return True
