@@ -19,3 +19,9 @@ add = {
         );    
     """
 }
+
+update = {
+    "update_username": "update users set username = '{prompt1}' where email is '{prompt2}';",
+    "update_email": "update users set email = '{prompt1}' where username is '{prompt2}';",
+    "update_password": "update users set password = '{prompt1}' where username is '{prompt2}';"
+}

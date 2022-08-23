@@ -7,6 +7,7 @@ from .Card import Card
 from .Player import Player
 from .Dealer import Dealer
 from .Database import Database
+import time
 
 
 class Menu:
@@ -33,6 +34,7 @@ class Menu:
             self.player = Player(
                 account_info["username"],
                 account_info["password"],
+                account_info["email"],
                 account_info["firstname"],
                 account_info["lastname"],
                 account_info["balance"])
@@ -75,6 +77,7 @@ class Menu:
             self.player = Player(
                 entered_username,
                 entered_password,
+                entered_email,
                 entered_firstname,
                 entered_lastname,
                 0)
@@ -104,7 +107,7 @@ class Menu:
         else:
             self.__start_page()
     
-    def __landing_page(self):
+    def __landing_page(self) -> None:
         os.system("cls" if os.name == "nt" else "clear")
         print(f"--- Välkommen {self.player.first_name} ---\n")
         player_action = int(input("""Välj från alternativen nedan:
@@ -118,7 +121,7 @@ class Menu:
             self.__quit()
         elif player_action == 1:
             os.system("cls" if os.name == "nt" else "clear")
-            self.__quit()
+            self.__view_account()
         elif player_action == 2:
             os.system("cls" if os.name == "nt" else "clear")
             self.__wallet()
@@ -128,7 +131,7 @@ class Menu:
         else:
             self.__landing_page()
 
-    def __wallet(self):
+    def __wallet(self) -> None:
         saldo = colored(self.player.balance, "green")
         print(f"--- Plånbok ---\n\nDitt saldo är {saldo} kr\n\n")
         player_action = int(input("""Välj från alternativen nedan: 
@@ -148,3 +151,89 @@ class Menu:
         else:
             os.system("cls" if os.name == "nt" else "clear")
             self.__wallet()
+
+    def __view_account(self) -> None:
+        player_balance = colored(self.player.balance, "green")
+        print(f"--- Mitt konto ---\n\n-- {self.player.first_name} {self.player.last_name} --")
+        to_print = [f"Användarnamn: {self.player.username}", 
+                    f"E-postadress: {self.player.email}",
+                    f"Saldo: {player_balance} kr"]
+        for item in to_print:
+            print(item)
+        player_action = int(input("""Välj från alternativen nedan:
+[0] Ändra användarnamn 
+[1] Ändra e-postadress 
+[2] Ändra lösenord 
+[3] Tillbaka
+"""))   
+        if player_action == 0:
+            os.system("cls" if os.name == "nt" else "clear")
+            self.__change_username()
+        elif player_action == 1:
+            os.system("cls" if os.name == "nt" else "clear")
+            self.__change_email()
+        elif player_action == 2:
+            os.system("cls" if os.name == "nt" else "clear")
+            self.__change_password()
+        elif player_action == 3:
+            os.system("cls" if os.name == "nt" else "clear")
+            self.__landing_page()   
+        return
+        
+    def __change_username(self) -> None:
+        print("--- Byt användarnamn ---\n")
+        new_username = input("Ange ditt nya användarnamn: ")
+        try:
+            self.game.db.update("update_username", new_username, self.player.email)
+            self.player.username = new_username
+            print("\nAnvändarnamnet uppdaterat!")
+            time.sleep(2)
+            os.system("cls" if os.name is "nt" else "clear")
+            self.__view_account()
+        except:
+            print("\nMisslyckades...")
+            time.sleep(2)
+            self.__view_account()
+        return
+
+    def __change_email(self) -> None:
+        print("--- Ändra ansluten e-portadress ---\n")
+        new_email = input("Ange din nya e-portadress: ")
+        try:
+            self.game.db.update("update_email", new_email, self.player.username)
+            self.player.email = new_email
+            print("\nE-postadressen uppdaterat!")
+            time.sleep(2)
+            os.system("cls" if os.name is "nt" else "clear")
+            self.__view_account()
+        except:
+            print("\nMisslyckades...")
+            time.sleep(2)
+            self.__view_account()
+        return
+
+    def __change_password(self) -> None:
+        print("--- Ändra lösenord ---\n")
+        print("Ange ditt nya lösenord")
+        new_password = self.__prompt_password()
+        print("Upprepa ditt nya lösenord")
+        confirm_new_password = self.__prompt_password()
+        if new_password == confirm_new_password:
+            try:
+                self.game.db.update("update_password", new_password, self.player.username)
+                self.player.password = new_password
+                print("\nLösenordet uppdaterat!")
+                time.sleep(2)
+                os.system("cls" if os.name is "nt" else "clear")
+                self.__view_account()
+            except:
+                print("\nMisslyckades...")
+                time.sleep(3)
+                self.__view_account()
+        else:
+            print("\nLösenorden matchar inte! \nVälj 'Ändra lösenord' och försök igen")
+            time.sleep(2)
+            os.system("cls" if os.name is "nt" else "clear")
+            self.__view_account()
+        return
+            
