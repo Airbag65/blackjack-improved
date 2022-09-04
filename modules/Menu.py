@@ -12,15 +12,19 @@ import time
 
 class Menu:
     def __init__(self, database_path) -> None:
-        self.game = Game(database_path)
+        self.game = None
+        self.database_path = database_path
         self.db = Database(database_path)
         self.__start_page()
+
 
     def __quit(self):
         print("--- Välkommen åter ---\n")
 
+
     def __prompt_password(self) -> str:
         return md5(pwinput(prompt="Lösenord: ",mask="*").encode("utf-8")).hexdigest()
+
 
     def __login(self) -> bool:
         print("--- Logga in ---\n")
@@ -43,7 +47,8 @@ class Menu:
             return True
         else:
             print("Felaktigt lösenord!")
-            
+
+
     def __new_account(self) -> bool:
         print("--- Skapa nytt konto ---\n")
         entered_username = input("Användarnamn: ")
@@ -68,7 +73,8 @@ class Menu:
         print("Ange lösenordet igen")
         entered_confirm_password = self.__prompt_password()
         if entered_password == entered_confirm_password:
-            self.game.db.add(
+            print("got here")
+            self.db.add(
                 "new_user",
                 entered_username,
                 entered_email,
@@ -88,6 +94,7 @@ class Menu:
             print("Lösenorden är inte likadana! \nFörsök igen!\n")
             return False
         
+
     def __start_page(self) -> None:
         os.system("cls" if os.name == "nt" else "clear")
         print("--- Välkommen till Blackjack ---\n")
@@ -108,6 +115,7 @@ class Menu:
         else:
             self.__start_page()
     
+
     def __landing_page(self) -> None:
         os.system("cls" if os.name == "nt" else "clear")
         print(f"--- Välkommen {self.player.first_name} ---\n")
@@ -119,7 +127,8 @@ class Menu:
 """))
         if player_action == 1:
             os.system("cls" if os.name == "nt" else "clear")
-            self.__quit()
+            self.game = Game(self.database_path, self.player)
+            self.__landing_page()
         elif player_action == 2:
             os.system("cls" if os.name == "nt" else "clear")
             self.__view_account()
@@ -131,6 +140,7 @@ class Menu:
             self.__quit()
         else:
             self.__landing_page()
+        return
 
     def __wallet(self) -> None:
         saldo = colored(self.player.balance, "green")
@@ -149,10 +159,13 @@ class Menu:
         if player_action == 3:
             os.system("cls" if os.name == "nt" else "clear")
             self.__landing_page()
+            return
         else:
             os.system("cls" if os.name == "nt" else "clear")
             self.__wallet()
+            return
         return
+
 
     def __deposit(self):
         # TODO Ersätta med faktisk funktion
@@ -200,7 +213,8 @@ class Menu:
             os.system("cls" if os.name == "nt" else "clear")
             self.__landing_page()   
         return
-        
+
+
     def __change_username(self) -> None:
         print("--- Byt användarnamn ---\n")
         new_username = input("Ange ditt nya användarnamn: ")
@@ -217,6 +231,7 @@ class Menu:
             self.__view_account()
         return
 
+
     def __change_email(self) -> None:
         print("--- Ändra ansluten e-portadress ---\n")
         new_email = input("Ange din nya e-portadress: ")
@@ -232,6 +247,7 @@ class Menu:
             time.sleep(2)
             self.__view_account()
         return
+
 
     def __change_password(self) -> None:
         print("--- Ändra lösenord ---\n")
